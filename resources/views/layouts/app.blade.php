@@ -16,8 +16,10 @@
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="{{asset('/css/style.css')}}">
+    {{-- Datatables --}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
     <!-- endinject -->
-    <link rel="shortcut icon" href="{{asset('/images/favicon.png')}}" />
+    <link rel="shortcut icon" href="{{asset('/images/logotipo.png')}}" />
 </head>
 
 <body>
@@ -25,8 +27,10 @@
         <!-- partial:../../partials/_navbar.html -->
         <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-                <a class="navbar-brand brand-logo" href="{{ url('/home') }}"><img src="../../images/logo.svg" alt="logo" /></a>
-                <a class="navbar-brand brand-logo-mini" href="{{ url('/home') }}"><img src="../../images/logo-mini.svg" alt="logo" /></a>
+                <a class="navbar-brand brand-logo" href="{{ url('/inicio') }}">
+                    <!--<img src="../../images/logo-web.png" alt="logo" />-->Sistema VIAJATEmx</a>
+                <a class="navbar-brand brand-logo-mini" href="{{ url('/inicio') }}"><img src="{{asset('/images/logo-mini.svg')}}"
+                        alt="logo" /></a>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-stretch">
                 <ul class="navbar-nav navbar-nav-right">
@@ -196,7 +200,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/home') }}">
+                        <a class="nav-link" href="{{ url('/inicio') }}">
                             <span class="menu-title">Panel de control</span>
                             <i class="mdi mdi-home menu-icon"></i>
                         </a>
@@ -226,8 +230,9 @@
                         </a>
                         <div class="collapse" id="config">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"> <a class="nav-link" href="#">Roles</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="#">Empleados</a></li>
+                                {{-- <li class="nav-item"> <a class="nav-link" href="#">Empresa</a></li> --}}
+                                <li class="nav-item"> <a class="nav-link" href="{{url('/empleados')}}">Empleados</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{url('/admin/roles')}}">Roles</a></li>
                             </ul>
                         </div>
                     </li>
@@ -264,15 +269,27 @@
             <!-- partial -->
             <div class="main-panel">
                 <div class="content-wrapper">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            @yield('page-header')
+                        </h3>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">@yield('page-header-one')</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">@yield('page-header-two')</li>
+                            </ol>
+                        </nav>
+                    </div>
                     @yield('content')
                 </div>
                 <!-- content-wrapper ends -->
                 <!-- partial:../../partials/_footer.html -->
                 <footer class="footer">
                     <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2018 <a
-                                href="#" target="_blank">Viajate MX</a>. Todos los derechos reservados.</span>
-                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hecho a mano y hecho
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright ©
+                            2018 <a href="#" target="_blank">Viajate MX</a>. Todos los derechos reservados.</span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hecho a mano y
+                            hecho
                             con <i class="mdi mdi-heart text-danger"></i></span>
                     </div>
                 </footer>
@@ -295,6 +312,10 @@
     <!-- endinject -->
     <!-- Custom js for this page-->
     <!-- End custom js for this page-->
+    {{-- Datatables --}}
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    @yield('js')
 </body>
-
 </html>

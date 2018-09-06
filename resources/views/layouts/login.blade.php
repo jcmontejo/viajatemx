@@ -15,7 +15,7 @@
     <!-- inject:css -->
     <link rel="stylesheet" href="{{asset('/css/style.css')}}">
     <!-- endinject -->
-    <link rel="shortcut icon" href="{{asset('/images/favicon.png')}}" />
+    <link rel="shortcut icon" href="{{asset('/images/logotipo.png')}}" />
 </head>
 
 <body>
@@ -24,9 +24,9 @@
             <div class="content-wrapper d-flex align-items-center auth">
                 <div class="row w-100">
                     <div class="col-lg-4 mx-auto">
-                        <div class="auth-form-light text-left p-5">
+                        <div class="auth-form-light text-center p-5">
                             <div class="brand-logo">
-                                <img src="{{asset('/images/logo.svg')}}">
+                                <img src="{{asset('/images/logotipo.png')}}">
                             </div>
                             <h4>¡Hola! empecemos</h4>
                             <h6 class="font-weight-light">Inicia sesión para continuar.</h6>
