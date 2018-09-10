@@ -42,7 +42,7 @@ Editar
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">Bloquear Usuario</label>
-                        <input type="checkbox" name="status" class="form-control" @if ($user->status == 0)
+                            <input type="checkbox" name="status" class="form-control" @if ($user->status == 0)
                             checked
                         @endif>
                     </div>
@@ -56,6 +56,7 @@ Editar
                     @if(isset($user))
                     @include('shared._permissions', ['closed' => 'true', 'model' => $user ])
                     @endif
+                    <hr>
                     <button type="submit" class="btn btn-gradient-primary mr-2">Guardar</button>
                 </form>
             </div>

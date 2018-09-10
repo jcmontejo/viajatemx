@@ -27,7 +27,12 @@ Route::get('/empleados/editar/{id}','UserController@edit');
 Route::post('/empleados/update/', 'UserController@update');
 Route::get('/empleados/eliminar/{id}', 'UserController@destroy')->name('empleados.destroy');
 // Fin Empleados
+
 // Roles
 Route::resource('admin/roles', 'RoleController');
 // Fin roles
+
+// Wizard Form
+Route::get('/cotizador', 'QuotingController@showQuoting')->name('cotizador');
+Route::post('/guardar/cotizacion', 'QuotationController@store');
 
