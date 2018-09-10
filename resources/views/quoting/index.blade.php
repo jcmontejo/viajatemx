@@ -24,6 +24,9 @@
 
     {{-- Toast --}}
     <link rel="stylesheet" type="text/css" href="{{asset('/quoting/toastr.css')}}">
+
+    {{-- Google Maps --}}
+   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyB6K1CFUQ1RwVJ-nyXxd6W0rfiIBe12Q&libraries=places"></script>
 </head>
 
 <body>
@@ -119,8 +122,8 @@
                                                         <i class="material-icons">place</i>
                                                     </span>
                                                     <div class="form-group label-floating">
-                                                        <label class="control-label">Destino <small>(requerido)</small></label>
-                                                        <input name="destination" type="text" class="form-control"
+                                                        {{-- <label class="control-label">Destino <small>(requerido)</small></label> --}}
+                                                        <input name="destination" id="city" type="text" class="form-control"
                                                             required>
                                                     </div>
                                                 </div>
@@ -268,6 +271,17 @@
             break;
     }
     @endif
+
+</script>
+<script type="text/javascript">
+    function initialize() {
+        var options = {
+            types: ['(cities)'],
+        };
+        var input = document.getElementById('city');
+        var autocomplete = new google.maps.places.Autocomplete(input, options);
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
 
 </script>
 
