@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Quotation;
 use Illuminate\Http\Request;
+use Validator;
 
 class QuotationController extends Controller
 {
@@ -19,7 +20,28 @@ class QuotationController extends Controller
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'concept' => 'required',
+            'destination' => 'required',
+            'phone' => 'required',
+            'email' => 'required',
+            'name' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $notification = array(
+                'message' => 'Tienes que llenar todos los campos que son obligatorios (requeridos).',
+                'title' => 'Error',
+                'alert-type' => 'error',
+            );
+
+            return redirect('/cotizador')
+                ->with($notification)
+                ->withInput();
+        }
+
         $quotation = new Quotation;
+        $quotation->name_client = $request->name;
         $quotation->concept = $request->concept;
         $quotation->destination = $request->destination;
         $quotation->phone = $request->phone;
@@ -29,9 +51,9 @@ class QuotationController extends Controller
         $quotation->save();
 
         $notification = array(
-            'message' => 'Hemos recibido tu solicitud y te contactaremos a la brevedad.',
+            'message' => 'Hemos recibido tu solicitud, te contactaremos a la brevedad.',
             'title' => 'Gracias',
-            'alert-type' => 'success',
+            'alert-type' => 'info',
         );
 
         return redirect('/cotizador')->with($notification);

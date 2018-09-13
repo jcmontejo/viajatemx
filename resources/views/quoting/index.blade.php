@@ -26,11 +26,11 @@
     <link rel="stylesheet" type="text/css" href="{{asset('/quoting/toastr.css')}}">
 
     {{-- Google Maps --}}
-   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyB6K1CFUQ1RwVJ-nyXxd6W0rfiIBe12Q&libraries=places"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyB6K1CFUQ1RwVJ-nyXxd6W0rfiIBe12Q&libraries=places"></script>
 </head>
 
 <body>
-    <div class="image-container set-full-height" style="background-image: url('{{asset('/quoting/assets/img/bg_3.jpg')}}')">
+    <div class="image-container set-full-height" style="background-image: url('{{asset('/quoting/assets/img/bg_4.jpg')}}')">
         <!--   Creative Tim Branding   -->
         <a href="{{url('/')}}">
             <div class="logo-container">
@@ -83,7 +83,8 @@
                                                     </span>
                                                     <div class="form-group label-floating">
                                                         <label class="control-label">Nombre <small>(requerido)</small></label>
-                                                        <input name="name" type="text" class="form-control" required>
+                                                        <input name="name" value="{{ old('name') }}" type="text" class="form-control"
+                                                            required>
                                                     </div>
                                                 </div>
                                                 <div class="input-group">
@@ -92,7 +93,8 @@
                                                     </span>
                                                     <div class="form-group label-floating">
                                                         <label class="control-label">Correo Electrónico <small>(requerido)</small></label>
-                                                        <input name="email" type="email" class="form-control" required>
+                                                        <input name="email" value="{{ old('email') }}" type="email"
+                                                            class="form-control" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -103,7 +105,8 @@
                                                     </span>
                                                     <div class="form-group label-floating">
                                                         <label class="control-label">Teléfono <small>(requerido)</small></label>
-                                                        <input name="phone" type="text" class="form-control" required>
+                                                        <input name="phone" value="{{ old('phone') }}" type="text"
+                                                            class="form-control" required>
                                                     </div>
                                                 </div>
                                                 <div class="input-group">
@@ -112,7 +115,8 @@
                                                     </span>
                                                     <div class="form-group label-floating">
                                                         <label class="control-label">Facebook</label>
-                                                        <input name="facebook" type="text" class="form-control">
+                                                        <input name="facebook" value="{{ old('facebook') }}" type="text"
+                                                            class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
@@ -122,9 +126,10 @@
                                                         <i class="material-icons">place</i>
                                                     </span>
                                                     <div class="form-group label-floating">
-                                                        {{-- <label class="control-label">Destino <small>(requerido)</small></label> --}}
-                                                        <input name="destination" id="city" type="text" class="form-control"
-                                                            required>
+                                                        {{-- <label class="control-label">Destino <small>(requerido)</small></label>
+                                                        --}}
+                                                        <input name="destination" value="{{ old('destination') }}" id="city"
+                                                            type="text" class="form-control" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -181,17 +186,16 @@
                                             <div class="col-sm-6 col-sm-offset-1">
                                                 <div class="form-group">
                                                     <label>Descripción del Viaje</label>
-                                                    <textarea name="trip_description" class="form-control" placeholder=""
-                                                        rows="6"></textarea>
+                                                    <textarea name="trip_description" value="{{ old('trip_description') }}"
+                                                        class="form-control" placeholder="" rows="6"></textarea>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group">
                                                     <label class="control-label">Ejemplo</label>
-                                                    <p class="description">"The room really nice name is recognized as
-                                                        being a really awesome room. We use it every sunday when we go
-                                                        fishing and we catch a lot. It has some kind of magic shield
-                                                        around it."</p>
+                                                    <p class="description">"Deseo un viaje para 2 personas (Adultos),
+                                                        me gustaría que el viaje sea personalizado es decir que conste
+                                                        de transporte y además de hospedaje y alimentación."</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -255,7 +259,7 @@
     var type = "{{ Session::get('alert-type', 'info') }}";
     switch (type) {
         case 'info':
-            toastr.info("{{ Session::get('message') }}");
+            toastr.info("{{ Session::get('message') }}", "{{Session::get('title')}}");
             break;
 
         case 'warning':
@@ -267,7 +271,7 @@
             break;
 
         case 'error':
-            toastr.error("{{ Session::get('message') }}");
+            toastr.error("{{ Session::get('message') }}", "{{Session::get('title')}}");
             break;
     }
     @endif

@@ -15,6 +15,7 @@ class CreateTableQuotation extends Migration
     {
         Schema::create('quotations', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name_client');
             $table->string('concept');
             $table->string('destination');
             $table->string('phone');
