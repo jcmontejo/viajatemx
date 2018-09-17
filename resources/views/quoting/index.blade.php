@@ -30,9 +30,9 @@
 </head>
 
 <body>
-    <div class="image-container set-full-height" style="background-image: url('{{asset('/quoting/assets/img/bg_4.jpg')}}')">
+    <div class="image-container set-full-height" style="background-image: url('{{asset('/quoting/assets/img/bg_6.jpg')}}')">
         <!--   Creative Tim Branding   -->
-        <a href="{{url('/')}}">
+        <a href="{{url('/clientes/cotizador')}}">
             <div class="logo-container">
                 <div class="logo">
                     <img src="{{asset('/quoting/assets/img/new_logo.png')}}">

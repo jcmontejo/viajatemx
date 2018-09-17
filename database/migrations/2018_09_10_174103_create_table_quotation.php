@@ -28,6 +28,7 @@ class CreateTableQuotation extends Migration
             $table->date('date_send')->nullable();
             $table->string('medium')->nullable();
             $table->string('status')->default('received');
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
 

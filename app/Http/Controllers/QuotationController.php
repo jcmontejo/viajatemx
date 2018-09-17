@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\QuotationReceived;
 use App\Quotation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Validator;
 
 class QuotationController extends Controller
 {
     public function index(Request $request)
     {
+        $quotations = Quotation::all();
 
+        return view('requests.index', compact('quotations'));
     }
 
     public function create()
@@ -35,7 +39,7 @@ class QuotationController extends Controller
                 'alert-type' => 'error',
             );
 
-            return redirect('/cotizador')
+            return redirect('/clientes/cotizador')
                 ->with($notification)
                 ->withInput();
         }
@@ -50,12 +54,44 @@ class QuotationController extends Controller
         $quotation->suscribe = $request->suscribe;
         $quotation->save();
 
+        Mail::to($quotation->email)->send(new QuotationReceived());
+
         $notification = array(
             'message' => 'Hemos recibido tu solicitud, te contactaremos a la brevedad.',
             'title' => 'Gracias',
             'alert-type' => 'info',
         );
 
-        return redirect('/cotizador')->with($notification);
+        return redirect('/clientes/cotizador')->with($notification);
+    }
+
+    public function process($id)
+    {
+        $quotation = Quotation::find($id);
+        return view('requests.process', compact('quotation'));
+    }
+
+    public function send(Request $request)
+    {
+        $quotation = Quotation::find($request->id);
+
+        $quotation->attended = $request->attended;
+        $quotation->send = $request->send;
+        $quotation->medium = $request->medium;
+        $quotation->date_send = $request->date_send;
+        $quotation->status = 'send';
+
+        if ($request->notes) {
+            $quotation->notes = $request->notes;
+        }
+        $quotation->save();
+
+        $notification = array(
+            'message' => 'Solicitud procesada exitosamente.',
+            'title' => 'Gracias',
+            'alert-type' => 'info',
+        );
+
+        return redirect('/admin/solicitudes')->with($notification);
     }
 }

@@ -20,6 +20,10 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
     <!-- endinject -->
     <link rel="shortcut icon" href="{{asset('/images/logotipo.png')}}" />
+
+    {{-- Toast --}}
+    <link rel="stylesheet" type="text/css" href="{{asset('/quoting/toastr.css')}}">
+    @yield('style')
 </head>
 
 <body>
@@ -38,7 +42,7 @@
                         <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown"
                             aria-expanded="false">
                             <div class="nav-profile-img">
-                                <img src="../../images/faces/face1.jpg" alt="image">
+                            <img src="{{asset('/images/faces/face1.jpg')}}" alt="image">
                                 <span class="availability-status online"></span>
                             </div>
                             <div class="nav-profile-text">
@@ -62,7 +66,7 @@
                             <i class="mdi mdi-fullscreen" id="fullscreen-button"></i>
                         </a>
                     </li>
-                    <li class="nav-item dropdown">
+                    {{-- <li class="nav-item dropdown">
                         <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" data-toggle="dropdown"
                             aria-expanded="false">
                             <i class="mdi mdi-email-outline"></i>
@@ -112,7 +116,7 @@
                             <div class="dropdown-divider"></div>
                             <h6 class="p-3 mb-0 text-center">4 nuevos mensajes</h6>
                         </div>
-                    </li>
+                    </li> --}}
                     <li class="nav-item dropdown">
                         <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
                             data-toggle="dropdown">
@@ -120,7 +124,7 @@
                             <span class="count-symbol bg-danger"></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-                            <h6 class="p-3 mb-0">Notificaciones</h6>
+                            <h6 class="p-3 mb-0">Solicitudes Recientes</h6>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item preview-item">
                                 <div class="preview-thumbnail">
@@ -164,7 +168,7 @@
                                 </div>
                             </a>
                             <div class="dropdown-divider"></div>
-                            <h6 class="p-3 mb-0 text-center">Ver todas las notificaciones</h6>
+                        <a href="{{url('/admin/solicitudes')}}"><h6 class="p-3 mb-0 text-center">Ver todas las solicitudes</h6></a>
                         </div>
                     </li>
                     <li class="nav-item nav-logout d-none d-lg-block">
@@ -188,7 +192,7 @@
                     <li class="nav-item nav-profile">
                         <a href="#" class="nav-link">
                             <div class="nav-profile-image">
-                                <img src="../../images/faces/face1.jpg" alt="profile">
+                                <img src="{{asset('/images/faces/face1.jpg')}}" alt="profile">
                                 <span class="login-status online"></span>
                                 <!--change to offline or busy as needed-->
                             </div>
@@ -213,12 +217,9 @@
                         </a>
                         <div class="collapse" id="sistema">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"> <a class="nav-link" href="#">Proveedores</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="#">Aliados</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="#">Rutas</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="#">TDC</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="#">Estatus de Pago</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="#">Formas de Pago</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="{{url('/admin/proveedores')}}">Proveedores</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="{{url('/admin/rutas')}}">Rutas</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="{{url('/admin/tarjetas')}}">Tarjetas de Crédito</a></li>
                             </ul>
                         </div>
                     </li>
@@ -245,8 +246,9 @@
                         <div class="collapse" id="cuentas">
                             <ul class="nav flex-column sub-menu">
                                 <li class="nav-item"> <a class="nav-link" href="#">Clientes</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="#">Solicitudes</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="#">Tickets</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="{{url('/admin/solicitudes')}}">Solicitudes</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="#">Cuentas Pagadas</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="#">Cuentas por Cobrar</a></li>
                             </ul>
                         </div>
                     </li>
