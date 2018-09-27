@@ -22,7 +22,7 @@ Todas
                 <div class="table-responsive">
                     <table class="table table-striped" id="quotations">
                         <thead>
-                            <tr>
+                            <tr class="bg-primary text-white">
                                 <th>Nombre</th>
                                 <th>Concepto</th>
                                 <th>Destino</th>
@@ -60,28 +60,32 @@ Todas
                                 </td>
                                 <td>
                                     @if ($item->trip_description)
-                                    {{$item->trip_description}}
+                                    {{-- {{str_limit($item->trip_description,20)}} --}}
+                                    <a href="#" class="btn btn-success" data-toggle="popover" title="Descripción de Solicitud"
+                                        data-content="{{$item->trip_description}}">Click para Ver</a>
                                     @else
                                     N/A
                                     @endif
                                 </td>
                                 <td>
                                     @if ($item->status === 'received')
-                                    Recibida
+                                    <label class="badge badge-warning">Recibida</label>
                                     @elseif($item->status === 'send')
-                                    Enviada
+                                    <label class="badge badge-info">Enviada</label>
                                     @endif
                                 </td>
-                                <td>
+                                <td class="text-right sorting_1">
                                     @if ($item->status === 'send')
                                     <div class="btn-group">
-                                    <a href="#" class="btn btn-xs btn-gradient-success mr-2 btn-icon-text">Venta<i class="mdi mdi-credit-card btn-icon-append"></i></a>
-                                    <a href="" class="btn btn-xs btn-gradient-info mr-2 btn-icon-text" data-toggle="modal"
-                                    data-target="#data_{{$item->id}}">Detalles<i class="mdi mdi-account-search btn-icon-append"></i></a></a>
-                                    @else
-                                    <a href="{{url('/admin/solicitudes/procesar',$item->id)}}" class="btn btn-xs btn-gradient-primary mr-2 btn-icon-text">Procesar
-                                        <i class="mdi mdi mdi-rotate-3d btn-icon-append"></i></a>
-                                    @endif
+                                        <a href="{{url('/admin/solicitudes/terminar',$item->id)}}" class="btn btn-xs btn-primary mr-2 btn-icon-text"><i
+                                                class="mdi mdi-credit-card btn-icon-append"></i>Venta</a>
+                                        <a href="" class="btn btn-xs btn-warning mr-2 btn-icon-text" data-toggle="modal"
+                                            data-target="#data_{{$item->id}}"><i class="mdi mdi-account-search btn-icon-append"></i>Detalles</a>
+                                        <a href="{{url('/admin/solicitudes/editar',$item->id)}}" class="btn btn-xs btn-gradient-info mr-2 btn-icon-text"><i class="mdi mdi mdi-tooltip-edit btn-icon-append"></i>Editar</a>
+                                        @else
+                                        <a href="{{url('/admin/solicitudes/procesar',$item->id)}}" class="btn btn-xs btn-primary mr-2 btn-icon-text"><i
+                                                class="mdi mdi mdi-rotate-3d btn-icon-append"></i>Procesar</a>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -104,7 +108,7 @@ Todas
         case 'info':
             toastr.info("{{ Session::get('message') }}", "{{Session::get('title')}}");
             break;
-    
+
         case 'warning':
             toastr.warning("{{ Session::get('message') }}");
             break;
@@ -135,6 +139,16 @@ Todas
                 [0, "asc"]
             ],
         });
+    });
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover();
     });
 
 </script>

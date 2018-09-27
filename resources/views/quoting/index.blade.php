@@ -129,7 +129,7 @@
                                                         {{-- <label class="control-label">Destino <small>(requerido)</small></label>
                                                         --}}
                                                         <input name="destination" value="{{ old('destination') }}" id="city"
-                                                            type="text" class="form-control" required>
+                                                            type="text" class="form-control" required placeholder="Introduce Destino">
                                                     </div>
                                                 </div>
                                             </div>
@@ -215,10 +215,10 @@
                                             <div class="col-sm-12">
                                                 <div class="checkbox">
                                                     <label>
-                                                        <input type="checkbox" name="suscribe">
+                                                        <input type="checkbox" name="suscribe" checked required>
                                                     </label>
                                                     Acepto que Viájate Mx use mis datos para enviarme información que
-                                                    pueda ser de mi interés
+                                                    pueda ser de mi interés (Requerido)
                                                 </div>
                                             </div>
                                         </div>

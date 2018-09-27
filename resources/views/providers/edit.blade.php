@@ -18,7 +18,7 @@ Editar
             <div class="card-body">
                 @include('layouts.messages')
                 <h4 class="card-title">Editar Proveedor</h4>
-                <form class="forms-sample" method="POST" action="{{url('/admin/proveedores/update')}}">
+                <form class="forms-sample" method="POST" action="{{url('/proveedores/update')}}">
                     @csrf
                     <div class="form-group">
                         <label for="exampleInputUsername1">Nombre</label>

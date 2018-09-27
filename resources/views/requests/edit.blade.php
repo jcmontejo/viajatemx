@@ -1,15 +1,15 @@
 @extends('layouts.app')
 @section('title')
-Procesar Solicitud
+Editar Solicitud
 @endsection
 @section('page-header')
-Procesar solicitud
+Editar solicitud
 @endsection
 @section('page-header-one')
 Solicitud
 @endsection
 @section('page-header-two')
-Procesar
+Editar
 @endsection
 @section('content')
 <div class="row">
@@ -60,14 +60,14 @@ Procesar
                     Usa los siguientes <code>campos</code> para completar el proceso de cotización.
                 </p>
                 @include('layouts.messages')
-                <form class="form-sample" method="POST" action="{{url('/admin/solicitudes/enviar')}}">
+                <form class="form-sample" method="POST" action="{{url('/admin/solicitudes/update')}}">
                     @csrf
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Realizo</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="attended" value="{{Auth::user()->name}} {{Auth::user()->lastname}}"
+                                <input type="text" name="attended" value="{{$quotation->attended}}"
                                         class="form-control" readonly required />
                                     <input type="hidden" name="id" value="{{$quotation->id}}">
                                 </div>
@@ -77,7 +77,7 @@ Procesar
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Envío</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="send" value="{{Auth::user()->name}} {{Auth::user()->lastname}}"
+                                <input type="text" name="send" value="{{$quotation->send}}"
                                         class="form-control" readonly required />
                                 </div>
                             </div>
@@ -89,8 +89,8 @@ Procesar
                                 <label class="col-sm-3 col-form-label">Medio de Envío</label>
                                 <div class="col-sm-9">
                                     <select class="form-control" name="medium" required>
-                                        <option>WhatsApp</option>
-                                        <option>Correo Electrónico</option>
+                                        <option value="WhatsApp" @if($quotation->medium=== 'WhatsApp') selected='selected' @endif>WhatsApp</option>
+                                        <option value="Correo Electrónico" @if($quotation->medium=== 'Correo Electrónico') selected='selected' @endif>Correo Electrónico</option>
                                     </select>
                                 </div>
                             </div>
@@ -99,7 +99,7 @@ Procesar
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Fecha de Envío</label>
                                 <div class="col-sm-9">
-                                    <input type="date" value="{{ Carbon\Carbon::now()->toDateString() }}" name="date_send" class="form-control" placeholder="dd/mm/yyyy"
+                                <input type="date" value="{{$quotation->date_send}}" name="date_send" class="form-control" placeholder="dd/mm/yyyy"
                                         required />
                                 </div>
                             </div>
@@ -110,13 +110,13 @@ Procesar
                             <div class="form-group row">
                                 <label class="col-md-3 col-form-label">Notas</label>
                                 <div class="col-md-12">
-                                    <textarea class="form-control" rows="5" id="notes" name="notes"></textarea>
+                                <textarea class="form-control" rows="5" id="notes" name="notes">{{$quotation->notes}}</textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <input type="submit" value="Procesar" class="btn btn-gradient-success btn-lg btn-block">
+                        <input type="submit" value="Guardar" class="btn btn-gradient-success btn-lg btn-block">
                     </div>
                 </form>
             </div>

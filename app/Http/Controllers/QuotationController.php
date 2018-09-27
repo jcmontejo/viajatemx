@@ -2,17 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Card;
 use App\Mail\QuotationReceived;
+use App\Provider;
 use App\Quotation;
+use App\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Validator;
 
 class QuotationController extends Controller
 {
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
+
     public function index(Request $request)
     {
-        $quotations = Quotation::all();
+        $quotations = Quotation::where('status', '<>', 'payment')->get();
 
         return view('requests.index', compact('quotations'));
     }
@@ -52,6 +60,7 @@ class QuotationController extends Controller
         $quotation->email = $request->email;
         $quotation->facebook = $request->facebook;
         $quotation->suscribe = $request->suscribe;
+        $quotation->trip_description = $request->trip_description;
         $quotation->save();
 
         Mail::to($quotation->email)->send(new QuotationReceived());
@@ -93,5 +102,36 @@ class QuotationController extends Controller
         );
 
         return redirect('/admin/solicitudes')->with($notification);
+    }
+
+    public function sale($id)
+    {
+        $quotation = Quotation::find($id);
+        $providers = Provider::all();
+        $routes = Route::all();
+        $cards = Card::all();
+
+        return view('requests.sale', compact('quotation', 'providers', 'routes', 'cards'));
+    }
+
+    public function edit($id)
+    {
+        $quotation = Quotation::find($id);
+
+        return view('requests.edit', compact('quotation'));
+    }
+
+    public function update(Request $request)
+    {
+        $this->validate($request, ['medium' => 'required', 'date_send' => 'required']);
+
+        $quotation = Quotation::findOrFail($request->input('id'));
+
+        $quotation->medium = $request->medium;
+        $quotation->date_send = $request->date_send;
+        $quotation->notes = $request->notes;
+        $quotation->save();
+
+        return redirect('/admin/solicitudes')->with('success', 'Registro editado satisfactoriamente.');
     }
 }

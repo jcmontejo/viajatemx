@@ -18,7 +18,7 @@ Crear
             <div class="card-body">
                 @include('layouts.messages')
                 <h4 class="card-title">Crear Proveedor</h4>
-                <form class="forms-sample" method="POST" action="{{url('/admin/proveedores/guardar')}}">
+                <form class="forms-sample" method="POST" action="{{url('/proveedores/guardar')}}">
                     @csrf
                     <div class="form-group">
                         <label for="exampleInputUsername1">Nombre</label>

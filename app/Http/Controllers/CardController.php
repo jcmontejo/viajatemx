@@ -7,7 +7,12 @@ use Illuminate\Http\Request;
 use Session;
 
 class CardController extends Controller
-{
+{   
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
         $cards = Card::all();

@@ -7,7 +7,12 @@ use Illuminate\Http\Request;
 use Session;
 
 class ProviderController extends Controller
-{
+{   
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
         $providers = Provider::all();
@@ -33,7 +38,7 @@ class ProviderController extends Controller
         Session::flash('message', 'Proveedor agregado.');
         Session::flash('status', 'success');
 
-        return redirect('/admin/proveedores');
+        return redirect('/proveedores');
     }
 
     public function edit($id)
@@ -57,12 +62,12 @@ class ProviderController extends Controller
         $provider->phone = $request->phone;
         $provider->save();
 
-        return redirect('/admin/proveedores')->with('success', 'Registro editado satisfactoriamente.');
+        return redirect('/proveedores')->with('success', 'Registro editado satisfactoriamente.');
     }
 
     public function destroy($id)
     {
         Provider::find($id)->delete();
-        return redirect('/admin/proveedores')->with('success', 'Registro eliminado satisfactoriamente.');
+        return redirect('/proveedores')->with('success', 'Registro eliminado satisfactoriamente.');
     }
 }

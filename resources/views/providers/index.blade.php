@@ -50,14 +50,14 @@ Todos
             <div class="card-body">
                 @include('layouts.messages')
                 <p class="card-description float-right">
-                    <a class="btn btn-gradient-success btn-rounded btn-lg" href="{{url('/admin/proveedores/crear')}}" role="button"><i
+                    <a class="btn btn-gradient-success btn-rounded btn-lg" href="{{url('/proveedores/crear')}}" role="button"><i
                             class="mdi mdi-account-plus"></i>&nbsp;
                         Nuevo Proveedor</a>
                 </p>
                 <div class="table-responsive">
                     <table class="table table-hover" id="providers">
                         <thead>
-                            <tr>
+                            <tr class="bg-primary text-white">
                                 <th>Nombre</th>
                                 <th>Contacto</th>
                                 <th>Correo de Contacto</th>
@@ -73,7 +73,7 @@ Todos
                                 <td class="text-success">{{$item->email}} <i class="mdi mdi-account"></i></td>
                                 <td>{{$item->phone}}</td>
                                 <td>
-                                    <a class="btn btn-primary btn-xs" href="{{url('/admin/proveedores/editar', $item['id'])}}"><i
+                                    <a class="btn btn-info btn-xs" href="{{url('/proveedores/editar', $item['id'])}}"><i
                                             class="mdi mdi-tooltip-edit"></i>
                                         Editar</a>
                                     <button type="button" data-toggle="modal" data-target="#confirmDeleteModal-{{ $item->id }}"

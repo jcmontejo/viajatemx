@@ -1,74 +1,52 @@
 @extends('layouts.app')
 @section('title')
-Rutas
+Ingresos
 @endsection
 @section('page-header')
-Rutas
+Ingresos
 @endsection
 @section('page-header-one')
-Rutas
+Ingresos
 @endsection
 @section('page-header-two')
-Todas
+Todos
 @endsection
 @section('content')
-<!-- Modal -->
-<div class="modal fade" id="routeModal" tabindex="-1" role="dialog" aria-labelledby="routeModalLabel">
-    <div class="modal-dialog" role="document">
-        <form class="forms-sample" method="POST" action="{{url('/rutas/guardar')}}">
-            @csrf
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="roleModalLabel">Ruta</h4>
-                </div>
-                <div class="modal-body">
-                    <!-- name Form Input -->
-                    <div class="form-group @if ($errors->has('name')) has-error @endif">
-                        {!! Form::label('name', 'Nombre') !!} {!! Form::text('name', null, ['class' => 'form-control
-                        input-lg', 'placeholder' => 'EJ. TRUXTLA - SAN CRISTOBAL']) !!} @if ($errors->has('name'))
-                        <p class="help-block">{{ $errors->first('name') }}</p> @endif
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                    <!-- Submit Form Button -->
-                    {!! Form::submit('Crear', ['class' => 'btn btn-primary']) !!}
-                </div>
-                {!! Form::close() !!}
-            </div>
-    </div>
+@if(session()->has('message'))
+<div class="alert alert-success alert-dismissable">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a> {{ session()->get('message') }}
 </div>
+@endif
 <div class="row">
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 @include('layouts.messages')
-                @if(session()->has('message'))
-                <div class="alert alert-success alert-dismissable">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a> {{
-                    session()->get('message') }}
-                </div>
-                @endif
-                <p class="card-description float-right">
-                    <button class="btn btn-gradient-success btn-rounded btn-lg" data-toggle="modal" data-target="#routeModal"
+                {{-- <p class="card-description float-right">
+                    <a class="btn btn-gradient-success btn-rounded btn-lg" href="{{url('/admin/tarjetas/crear')}}"
                         role="button"><i class="mdi mdi-account-plus"></i>&nbsp;
-                        Nueva Ruta</button>
-                </p>
+                        Nueva Tarjeta</a>
+                </p> --}}
                 <div class="table-responsive">
-                    <table class="table table-hover" id="routes">
+                    <table class="table table-hover" id="incomes">
                         <thead>
                             <tr class="bg-primary text-white">
-                                <th>Nombre</th>
-                                <th>Acciones</th>
+                                <th>Fecha Ingreso</th>
+                                <th>Importe</th>
+                                <th>Concepto</th>
+                                <th>Venta</th>
+                                {{-- <th>Acciones</th> --}}
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($routes as $item)
+                            @foreach ($incomes as $item)
                             <tr>
-                                <td>{{$item->name}}</td>
-                                <td>
-                                    <a class="btn btn-info btn-xs" href="{{url('/rutas/editar', $item['id'])}}"><i
+                                <td>{{$item->date}}</td>
+                                <td>{{$item->ammount}}</td>
+                                <td>{{$item->concept}}</td>
+                                <td>{{$item->sale_id}}</td>
+                                {{-- <td>
+                                    <a class="btn btn-info btn-xs" href="{{url('/admin/tarjetas/editar', $item['id'])}}"><i
                                             class="mdi mdi-tooltip-edit"></i>
                                         Editar</a>
                                     <button type="button" data-toggle="modal" data-target="#confirmDeleteModal-{{ $item->id }}"
@@ -85,10 +63,10 @@ Todas
                                                 </div>
                                                 <div class="modal-body">
                                                     ¿Seguro de eliminar el registro de &lsquo;{{
-                                                    $item->name}}&rsquo;?
+                                                    $item->name_bank}}&rsquo;?
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <form method="GET" action="{{ route('rutas.destroy',$item->id) }}">
+                                                    <form method="GET" action="{{ route('tarjetas.destroy',$item->id) }}">
                                                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
                                                         <input type="submit" name="submit" value="Eliminar" class='btn btn-danger'>
@@ -97,7 +75,7 @@ Todas
                                             </div>
                                         </div>
                                     </div>
-                                </td>
+                                </td> --}}
                             </tr>
                             @endforeach
                         </tbody>
@@ -110,7 +88,7 @@ Todas
 @endsection @section('js')
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#routes').DataTable({
+        $('#incomes').DataTable({
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
             }

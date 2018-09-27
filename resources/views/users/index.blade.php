@@ -25,7 +25,7 @@ Todos
                 <div class="table-responsive">
                     <table class="table table-hover" id="users">
                         <thead>
-                            <tr>
+                            <tr class="bg-primary text-white">
                                 <th>Nombre</th>
                                 <th>Apellidos</th>
                                 <th>Usuario de Acceso</th>
@@ -43,11 +43,11 @@ Todos
                                     @if ($item->status)
                                     <label class="badge badge-success">Activo</label>
                                     @else
-                                    <label class="badge badge-danger">Inactivo</label>
+                                    <label class="badge badge-warning">Inactivo</label>
                                     @endif
                                 </td>
                                 <td>
-                                    <a class="btn btn-primary btn-xs" href="{{url('/empleados/editar', $item['id'])}}"><i
+                                    <a class="btn btn-info btn-xs" href="{{url('/empleados/editar', $item['id'])}}"><i
                                             class="mdi mdi-tooltip-edit"></i>
                                         Editar</a>
                                     <button type="button" data-toggle="modal" data-target="#confirmDeleteModal-{{ $item->id }}"

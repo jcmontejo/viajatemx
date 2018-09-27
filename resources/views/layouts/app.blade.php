@@ -9,6 +9,8 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- plugins:css -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+        crossorigin="anonymous">
     <link rel="stylesheet" href="{{asset('/vendors/iconfonts/mdi/css/materialdesignicons.min.css')}}">
     <link rel="stylesheet" href="{{asset('/vendors/css/vendor.bundle.base.css')}}">
     <!-- endinject -->
@@ -23,13 +25,18 @@
 
     {{-- Toast --}}
     <link rel="stylesheet" type="text/css" href="{{asset('/quoting/toastr.css')}}">
+    {{-- Google Maps --}}
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyB6K1CFUQ1RwVJ-nyXxd6W0rfiIBe12Q&libraries=places"></script>
+    {{-- Calendar --}}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.7/fullcalendar.min.css"/>
     @yield('style')
 </head>
 
 <body>
     <div class="container-scroller">
         <!-- partial:../../partials/_navbar.html -->
-        <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row navbar-dark">
             <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
                 <a class="navbar-brand brand-logo" href="{{ url('/inicio') }}">
                     <!--<img src="../../images/logo-web.png" alt="logo" />-->Sistema VIAJATEmx</a>
@@ -42,7 +49,7 @@
                         <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown"
                             aria-expanded="false">
                             <div class="nav-profile-img">
-                            <img src="{{asset('/images/faces/face1.jpg')}}" alt="image">
+                                <img src="{{asset('/images/faces/face1.jpg')}}" alt="image">
                                 <span class="availability-status online"></span>
                             </div>
                             <div class="nav-profile-text">
@@ -168,7 +175,9 @@
                                 </div>
                             </a>
                             <div class="dropdown-divider"></div>
-                        <a href="{{url('/admin/solicitudes')}}"><h6 class="p-3 mb-0 text-center">Ver todas las solicitudes</h6></a>
+                            <a href="{{url('/admin/solicitudes')}}">
+                                <h6 class="p-3 mb-0 text-center">Ver todas las solicitudes</h6>
+                            </a>
                         </div>
                     </li>
                     <li class="nav-item nav-logout d-none d-lg-block">
@@ -217,9 +226,10 @@
                         </a>
                         <div class="collapse" id="sistema">
                             <ul class="nav flex-column sub-menu">
-                            <li class="nav-item"> <a class="nav-link" href="{{url('/admin/proveedores')}}">Proveedores</a></li>
-                            <li class="nav-item"> <a class="nav-link" href="{{url('/admin/rutas')}}">Rutas</a></li>
-                            <li class="nav-item"> <a class="nav-link" href="{{url('/admin/tarjetas')}}">Tarjetas de Crédito</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{url('/proveedores')}}">Proveedores</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{url('/rutas')}}">Rutas</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{url('/admin/tarjetas')}}">Tarjetas de
+                                        Crédito</a></li>
                             </ul>
                         </div>
                     </li>
@@ -237,6 +247,19 @@
                             </ul>
                         </div>
                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#report" aria-expanded="false" aria-controls="ui-basic">
+                            <span class="menu-title">Reportes</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-check-circle menu-icon"></i>
+                        </a>
+                        <div class="collapse" id="report">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item"> <a class="nav-link" href="{{url('/ingresos')}}">Ingresos</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{url('/gastos')}}">Gastos</a></li>
+                            </ul>
+                        </div>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="collapse" href="#cuentas" aria-expanded="false" aria-controls="ui-basic">
                             <span class="menu-title">Cuentas</span>
@@ -245,10 +268,14 @@
                         </a>
                         <div class="collapse" id="cuentas">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"> <a class="nav-link" href="#">Clientes</a></li>
-                            <li class="nav-item"> <a class="nav-link" href="{{url('/admin/solicitudes')}}">Solicitudes</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="#">Cuentas Pagadas</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="#">Cuentas por Cobrar</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{url('/admin/clientes')}}">Clientes</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{url('/admin/solicitudes/')}}">Solicitudes</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{url('/admin/ventas')}}">Todas las
+                                        cuentas</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{url('/admin/ventas/pagadas')}}">Cuentas
+                                        Pagadas</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{url('/admin/ventas/adeudo')}}">Cuentas
+                                        por Cobrar</a></li>
                             </ul>
                         </div>
                     </li>
@@ -261,9 +288,10 @@
                     <li class="nav-item sidebar-actions">
                         <span class="nav-link">
                             <div class="border-bottom">
-                                <h6 class="font-weight-normal mb-3">Solicitudes</h6>
+                                <h6 class="font-weight-normal mb-3">Ventas</h6>
                             </div>
-                            <button class="btn btn-block btn-lg btn-gradient-primary mt-4">+ Agregar nueva</button>
+                            <button class="btn btn-block btn-lg btn-gradient-primary mt-4" id="generate">+ Agregar
+                                nueva</button>
                         </span>
                     </li>
                 </ul>
@@ -319,5 +347,13 @@
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
     @yield('js')
+    <script>
+        $('#generate').click(function () {
+            window.location.href = '/admin/generar/venta';
+            return false;
+        });
+
+    </script>
 </body>
+
 </html>

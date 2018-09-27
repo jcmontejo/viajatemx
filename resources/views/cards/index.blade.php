@@ -30,7 +30,7 @@ Todas
                 <div class="table-responsive">
                     <table class="table table-hover" id="providers">
                         <thead>
-                            <tr>
+                            <tr class="bg-primary text-white">
                                 <th>Nombre Banco</th>
                                 <th>Nombre Cuenta</th>
                                 <th>Clave Interbancaria</th>
@@ -46,7 +46,7 @@ Todas
                                 <td>{{$item->key}}</td>
                                 <td>{{$item->account_number}}</td>
                                 <td>
-                                    <a class="btn btn-primary btn-xs" href="{{url('/admin/tarjetas/editar', $item['id'])}}"><i
+                                    <a class="btn btn-info btn-xs" href="{{url('/admin/tarjetas/editar', $item['id'])}}"><i
                                             class="mdi mdi-tooltip-edit"></i>
                                         Editar</a>
                                     <button type="button" data-toggle="modal" data-target="#confirmDeleteModal-{{ $item->id }}"

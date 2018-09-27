@@ -7,7 +7,12 @@ use Illuminate\Http\Request;
 use Session;
 
 class RouteController extends Controller
-{
+{   
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
         $routes = Route::all();
@@ -23,7 +28,7 @@ class RouteController extends Controller
         Session::flash('message', 'Ruta agregada.');
         Session::flash('status', 'success');
 
-        return redirect('/admin/rutas');
+        return redirect('/rutas');
 
     }
 
@@ -45,12 +50,12 @@ class RouteController extends Controller
         $route->name = $request->name;
         $route->save();
 
-        return redirect('/admin/rutas')->with('success', 'Registro editado satisfactoriamente.');
+        return redirect('/rutas')->with('success', 'Registro editado satisfactoriamente.');
     }
 
     public function destroy($id)
     {
         Route::find($id)->delete();
-        return redirect('/admin/rutas')->with('success', 'Registro eliminado satisfactoriamente.');
+        return redirect('/rutas')->with('success', 'Registro eliminado satisfactoriamente.');
     }
 }
