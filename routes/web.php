@@ -76,10 +76,11 @@ Route::post('/guardar/cotizacion', 'QuotationController@store');
 // Ver solicitudes en admin
 Route::get('/admin/solicitudes', 'QuotationController@index');
 Route::get('/admin/solicitudes/procesar/{id}', 'QuotationController@process');
-Route::post('/admin/solicitudes/enviar', 'QuotationController@send');
+Route::POST('/admin/solicitudes/enviar/', 'QuotationController@send');
 Route::get('/admin/solicitudes/terminar/{id}', 'QuotationController@sale');
 Route::get('/admin/solicitudes/editar/{id}', 'QuotationController@edit');
 Route::post('/admin/solicitudes/update/', 'QuotationController@update');
+Route::get('/admin/solicitudes/ver/{id}', 'QuotationController@show');
 
 // Proveedores
 Route::get('/proveedores', 'ProviderController@index');
@@ -111,23 +112,39 @@ Route::get('/admin/ventas/adeudo', 'SaleController@debts');
 Route::post('/admin/ventas/guardar', 'SaleController@store');
 Route::get('/admin/generar/venta', 'SaleController@generate');
 Route::post('/admin/generar/venta/guardar', 'SaleController@generateSave');
+Route::get('/detalles/venta/{id}','SaleController@details');
+Route::get('/admin/pagar/{id}','SaleController@showDebt');
+Route::PUT('admin/procesar/pago/{id}', 'SaleController@procesPayment');
+Route::get('listar/deudas', 'SaleController@listDebts');
+Route::get('/consultar/ventas/factura/{id}', 'SaleController@showSale');
 
 // Clients
 Route::get('/admin/clientes', 'ClientController@index');
 Route::get('/admin/clientes/crear', 'ClientController@create');
 Route::post('/admin/clientes/guardar', 'ClientController@store');
 Route::get('/admin/clientes/editar/{id}', 'ClientController@edit');
-Route::post('/admin/clientes/update', 'ClientController@update');
-Route::get('/admin/clientes/eliminar/{id}', 'ClientController@destroy')->name('clientes.destroy');
+Route::put('/admin/clientes/update/{id}', 'ClientController@update');
+Route::delete('/admin/clientes/eliminar/{id}', 'ClientController@destroy');
 
 // Ingresos
 Route::get('/ingresos', 'IncomeController@index');
 
 // Gastos
 Route::get('/gastos', 'ExpenseController@index');
+Route::post('/registrar/gasto', 'ExpenseController@register');
 
 // Cumpleaños
 Route::get('/cumpleaños/{id}',function($id){
     $client = App\Client::find($id);
     return view('birthday',compact('client'));
 });
+
+
+// Facturación
+Route::get('/generar/factura/{client}/{sale}','InvoiceController@create');
+Route::post('/guardar/factura', 'InvoiceController@store');
+Route::get('/ver/factura/{id}','InvoiceController@show');
+Route::get('/facturas/expedidas','InvoiceController@success');
+Route::get('/facturas/pendientes', 'InvoiceController@pending');
+
+Route::get('/facturas/emitir/{id}', 'InvoiceController@emit');

@@ -18,9 +18,11 @@ Todos
             <div class="card-body">
                 @include('layouts.messages')
                 <p class="card-description float-right">
+                    @can('agregar_empleados')
                     <a class="btn btn-gradient-success btn-rounded btn-lg" href="{{url('/empleados/crear')}}" role="button"><i
                             class="mdi mdi-account-plus"></i>&nbsp;
                         Nuevo Empleado</a>
+                    @endcan
                 </p>
                 <div class="table-responsive">
                     <table class="table table-hover" id="users">
@@ -47,11 +49,15 @@ Todos
                                     @endif
                                 </td>
                                 <td>
+                                    @can('editar_empleados')
                                     <a class="btn btn-info btn-xs" href="{{url('/empleados/editar', $item['id'])}}"><i
                                             class="mdi mdi-tooltip-edit"></i>
                                         Editar</a>
+                                    @endcan
+                                    @can('eliminar_empleados')
                                     <button type="button" data-toggle="modal" data-target="#confirmDeleteModal-{{ $item->id }}"
                                         class="btn btn-danger btn-xs"><i class="mdi mdi-delete"></i> Eliminar</button>
+                                    @endcan
                                     <!-- Modal (Confirm Delete) -->
                                     <div class="modal fade" id="confirmDeleteModal-{{ $item->id }}" tabindex="-1" role="dialog"
                                         aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
@@ -93,16 +99,19 @@ Todos
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
             },
-            columnDefs: [{
-                targets: [0],
-                visible: true,
-                searchable: true
-            }, ],
-            order: [
-                [0, "asc"]
-            ],
+            dom: 'Bfrtip',
+            buttons: [{
+                    extend: 'excel',
+                    className: 'btn btn-info btn-rounded mdi mdi-file-excel'
+                },
+                {
+                    extend: 'pdf',
+                    className: 'btn btn-info btn-rounded mdi mdi-file-pdf'
+                }
+            ]
         });
     });
+
 </script>
 @endsection
 @endsection

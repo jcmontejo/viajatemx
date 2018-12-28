@@ -65,6 +65,7 @@ Terminar
                 <input type="hidden" name="phone" value="{{$quotation->phone}}">
                 <input type="hidden" name="email" value="{{$quotation->email}}">
                 <input type="hidden" name="suscribe" value="{{$quotation->suscribe}}">
+                <input type="hidden" name="birthdate" value="{{$quotation->birthdate}}">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">

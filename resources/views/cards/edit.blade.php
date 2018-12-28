@@ -21,13 +21,13 @@ Editar
                 <form class="forms-sample" method="POST" action="{{url('/admin/tarjetas/update')}}">
                     @csrf
                     <div class="form-group">
-                        <label for="exampleInputUsername1">Nombre Banco</label>
+                        <label for="exampleInputUsername1">Nombre Cuenta</label>
                         <input type="text" name="name_bank" value="{{ $card->name_bank }}" class="form-control{{ $errors->has('name_bank') ? ' is-invalid' : '' }}"
                             id="exampleInputUsername1" placeholder="Nombre de Banco" required>
                              <input type="hidden" name="id" value="{{$card->id}}">
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Nombre Cuenta</label>
+                        <label for="exampleInputEmail1">Alias</label>
                         <input type="text" name="name_account" value="{{ $card->name_account }}" class="form-control{{ $errors->has('name_account') ? ' is-invalid' : '' }}"
                             id="exampleInputEmail1" placeholder="Introduce nombre de Cuenta" required>
                     </div>

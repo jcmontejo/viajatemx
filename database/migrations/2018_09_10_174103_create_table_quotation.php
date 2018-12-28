@@ -18,8 +18,12 @@ class CreateTableQuotation extends Migration
             $table->string('name_client');
             $table->string('concept');
             $table->string('destination');
+            $table->date('departure_date')->nullable();
+            $table->date('return_date')->nullable();
+            $table->string('transport')->nullable();
             $table->string('phone');
             $table->string('email');
+            $table->date('birthdate')->nullable();
             $table->string('facebook')->nullable();
             $table->string('suscribe')->nullable();
             $table->text('trip_description')->nullable();
@@ -29,6 +33,7 @@ class CreateTableQuotation extends Migration
             $table->string('medium')->nullable();
             $table->string('status')->default('received');
             $table->text('notes')->nullable();
+            $table->string('file')->nullable();
             $table->timestamps();
         });
 

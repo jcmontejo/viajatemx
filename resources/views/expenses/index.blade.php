@@ -22,11 +22,12 @@ Todos
         <div class="card">
             <div class="card-body">
                 @include('layouts.messages')
-                {{-- <p class="card-description float-right">
-                    <a class="btn btn-gradient-success btn-rounded btn-lg" href="{{url('/admin/tarjetas/crear')}}" role="button"><i
-                            class="mdi mdi-account-plus"></i>&nbsp;
-                        Nueva Tarjeta</a>
-                </p> --}}
+                <p class="card-description float-right">
+                    <a class="btn btn-gradient-success btn-rounded btn-lg" data-toggle="modal" data-target="#createExpense"
+                        role="button"><i class="mdi mdi-check-all"></i>&nbsp;
+                        Registrar Gasto</a>
+                </p>
+                @include('expenses.create')
                 <div class="table-responsive">
                     <table class="table table-hover" id="expenses">
                         <thead>
@@ -51,6 +52,12 @@ Todos
                             </tr>
                             @endforeach
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th style="text-align:right">Total:</th>
+                                <th colspan="5"></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -61,9 +68,54 @@ Todos
 <script type="text/javascript">
     $(document).ready(function () {
         $('#expenses').DataTable({
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(),
+                    data;
+
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                        i : 0;
+                };
+
+                // Total over all pages
+                total = api
+                    .column(1)
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Total over this page
+                pageTotal = api
+                    .column(1, {
+                        page: 'current'
+                    })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Update footer
+                $(api.column(1).footer()).html(
+                    '$' + pageTotal + ' ( $' + total + ' total)'
+                );
+            },
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-            }
+            },
+            dom: 'Bfrtip',
+            buttons: [{
+                    extend: 'excel',
+                    className: 'btn btn-info btn-rounded mdi mdi-file-excel'
+                },
+                {
+                    extend: 'pdf',
+                    className: 'btn btn-info btn-rounded mdi mdi-file-pdf'
+                }
+            ]
         });
     });
 

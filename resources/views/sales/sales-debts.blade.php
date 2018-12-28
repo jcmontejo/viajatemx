@@ -18,97 +18,122 @@ Todas
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                @include('layouts.messages')
-                <div class="table-responsive">
-                    <table class="table table-striped" id="sales">
-                        <thead>
-                            <tr class="bg-primary text-white">
-                                <th>Fecha Venta</th>
-                                <th>Proveedor</th>
-                                <th>Cliente</th>
-                                <th>Pasajero</th>
-                                <th>Clave</th>
-                                <th>Destino</th>
-                                <th>Estatus de Pago</th>
-                                <th>Total</th>
-                                <th>Pagado</th>
-                                <th>Debe</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($sales as $item)
-                            @include('sales.modal-data')
-                            <tr>
-                                <td>{{$item->date}}</td>
-                                <td>{{$item->provider}}</td>
-                                <td>{{$item->client}}</td>
-                                <td>{{$item->passenger}}</td>
-                                <td>{{$item->key}}</td>
-                                <td>{{$item->destination}}</td>
-                                <td>{{$item->payment_status}}</td>
-                                <td class="bg-info">${{number_format($item->commission_price)}}</td>
-                                <td class="bg-success">${{number_format($item->paid_out)}}</td>
-                                <td class="bg-danger">${{number_format($item->debt)}}</td>
-                                <td class="text-right sorting_1">
-                                    <div class="btn-group">
-                                        <a href="" class="btn btn-xs btn-gradient-info mr-2 btn-icon-text" data-toggle="modal"
-                                            data-target="#data_{{$item->id}}"><i class="mdi mdi-account-search btn-icon-append"></i>Detalles</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+               <div id="list-debt"></div>
             </div>
         </div>
     </div>
 </div>
+@include('sales.payment')
+@endsection
 @section('js')
-{{-- Toastr --}}
-<script src="{{asset('/quoting/toastr.min.js')}}"></script>
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous"></script>
+{{-- Funciones --}}
+<script type="text/javascript">
+    $(document).ready(function () {
+        listdebts();
+    });
 
-<script>
-    @if(Session::has('message'))
-    var type = "{{ Session::get('alert-type', 'info') }}";
-    switch (type) {
-        case 'info':
-            toastr.info("{{ Session::get('message') }}", "{{Session::get('title')}}");
-            break;
-
-        case 'warning':
-            toastr.warning("{{ Session::get('message') }}");
-            break;
-
-        case 'success':
-            toastr.success("{{ Session::get('message') }}", "{{Session::get('title')}}");
-            break;
-
-        case 'error':
-            toastr.error("{{ Session::get('message') }}", "{{Session::get('title')}}");
-            break;
+    var listdebts = function () {
+        $.ajax({
+            type: 'get',
+            url: '{{ url('listar/deudas')}}',
+            success: function (data) {
+                $('#list-debt').empty().html(data);
+            }
+        });
     }
-    @endif
+
+    $(document).on("click",".pagination li a",function(e) {
+        e.preventDefault();
+        var url = $(this).attr("href");
+        $.ajax({
+            type:'get',
+            url:url,
+            success: function(data){
+                $('#list-debt').empty().html(data);
+            }
+        });
+    });     
+
+    var Mostrar = function (id) {
+        var route = "{{url('admin/pagar')}}/" + id;
+        $.get(route, function (data) {
+            $("#id").val(data.id);
+            $("#debt").val(data.debt);
+            $("#clientDebt").val(data.client);
+            $("#destinationDebt").val(data.destination);
+            $("#commission_priceDebt").val(data.commission_price);
+        });
+    }
+
+    $("#actualizar").click(function () {
+        var id = $("#id").val();
+        var paid_out = $("#paid_out").val();
+        var route = "{{url('admin/procesar/pago')}}/" + id;
+        var token = $("#token").val();
+        $.ajax({
+            url: route,
+            headers: {
+                'X-CSRF-TOKEN': token
+            },
+            type: 'PUT',
+            dataType: 'json',
+            data: {
+                paid_out: paid_out
+            },
+            success: function (data) {
+                if (data.success == 'true') {
+                    //listdebts();
+                    location.reload();
+                    $("#paid_out").val("");
+                    $("#id").val("");
+                    $('#myModal').modal('toggle');
+                    $(".modal-backdrop").remove();
+                    $('body').removeClass('modal-open');
+                    swal("Bien hecho!", "Pago recibido exitosamente!", "success");
+                }else{
+                    swal("Ooops!", "Estas introduciendo una cantidad mayor al adeudo!", "error");
+                    $("#paid_out").val("");
+                }
+            },
+            error: function (data) {
+                $("#error").html(
+                    '¡Error! Verifica que estes introduciendo una cantidad númerica menor o igual al importe solicitado.'
+                );
+                $("#message-error").fadeIn();
+                if (data.status == 422) {
+                    console.clear();
+                }
+            }
+        });
+    });
+
+    //When closes window modal
+    $("#myModal").on("hidden.bs.modal", function () {
+        $("#message-error").fadeOut()
+    });
 
 </script>
+{{-- Toastr --}}
+<script src="{{asset('/quoting/toastr.min.js')}}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#sales').DataTable({
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
             },
-            columnDefs: [{
-                targets: [0],
-                visible: true,
-                searchable: true
-            }, ],
-            order: [
-                [0, "asc"]
-            ],
+            dom: 'Bfrtip',
+            buttons: [{
+                    extend: 'excel',
+                    className: 'btn btn-info btn-rounded mdi mdi-file-excel'
+                },
+                {
+                    extend: 'pdf',
+                    className: 'btn btn-info btn-rounded mdi mdi-file-pdf'
+                }
+            ]
         });
     });
-
 </script>
-@endsection
 @endsection

@@ -46,8 +46,10 @@ Todas
                                 <td>{{$item->payment_status}}</td>
                                 <td class="text-right sorting_1">
                                     <div class="btn-group">
+                                        @can('ver_detalle_venta')
                                         <a href="" class="btn btn-xs btn-gradient-info mr-2 btn-icon-text" data-toggle="modal"
                                             data-target="#data_{{$item->id}}"><i class="mdi mdi-account-search btn-icon-append"></i>Detalles</a>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>
@@ -92,17 +94,18 @@ Todas
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
             },
-            columnDefs: [{
-                targets: [0],
-                visible: true,
-                searchable: true
-            }, ],
-            order: [
-                [0, "asc"]
-            ],
+            dom: 'Bfrtip',
+            buttons: [{
+                    extend: 'excel',
+                    className: 'btn btn-info btn-rounded mdi mdi-file-excel'
+                },
+                {
+                    extend: 'pdf',
+                    className: 'btn btn-info btn-rounded mdi mdi-file-pdf'
+                }
+            ]
         });
     });
-
 </script>
 @endsection
 @endsection

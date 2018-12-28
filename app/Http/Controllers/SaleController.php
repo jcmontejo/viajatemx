@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Card;
 use App\Client;
 use App\Expense;
+use App\Http\Requests\PaymentRequest;
+use App\Http\Requests\terminateSale;
 use App\Income;
 use App\Provider;
 use App\Quotation;
@@ -21,6 +23,12 @@ class SaleController extends Controller
         $this->middleware('auth');
     }
 
+    protected $rules =
+        [
+        'ammount' => 'required',
+        'sale' => 'required',
+    ];
+
     public function index()
     {
         $sales = Sale::all();
@@ -35,23 +43,38 @@ class SaleController extends Controller
 
     public function debts()
     {
-        $sales = Sale::where('payment_status', 'PARCIAL')->get();
-        return view('sales.sales-debts', compact('sales'));
+        return view('sales.sales-debts');
     }
 
-    public function store(Request $request)
+    public function showSale($id)
+    {
+        $data = Sale::find($id);
+        return response()->json($data);
+    }
+
+    public function listDebts()
+    {
+        $sales = Sale::where('payment_status', 'PARCIAL')->paginate(5);
+        return view('sales.list-debt', compact('sales'));
+    }
+
+    public function store(terminateSale $request)
     {
         try {
             DB::beginTransaction();
+            $validated = $request->validated();
 
-            $upper = strtoupper($request->client);
+            $quotationReceived = Quotation::find($request->idQuotation);
+
+            $upper = strtoupper($quotationReceived->name_client);
 
             $client = new Client;
             $client->brand = str_slug($upper);
-            $client->name = $request->client;
-            $client->phone = $request->phone;
-            $client->email = $request->email;
-            $client->suscribe = $request->suscribe;
+            $client->name = $quotationReceived->name_client;
+            $client->phone = $quotationReceived->phone;
+            $client->email = $quotationReceived->email;
+            $client->birthdate = $quotationReceived->birthdate;
+            $client->suscribe = $quotationReceived->suscribe;
             $client->save();
 
             $mytime = Carbon::now('America/Mexico_City');
@@ -60,17 +83,21 @@ class SaleController extends Controller
             $sale = new Sale();
             $sale->date = $request->date;
             $sale->provider = $request->provider;
-            $sale->client = $request->client;
+            $sale->client = $client->name;
             $sale->passenger = $request->passenger;
             $sale->key = $request->key;
-            $sale->destination = $request->destination;
+            $sale->destination = $quotationReceived->destination;
             $sale->route = $request->route;
             $sale->departure_date = $request->departure_date;
             $sale->schedule = $request->schedule;
             $sale->unit_price = $request->unit_price;
             $sale->commission_price = $request->commission_price;
             $sale->tdc = $card->name_account;
-            $sale->payment_status = $request->payment_status;
+            if ($request->paid_out < $request->commission_price) {
+                $sale->payment_status = 'PARCIAL';
+            } else {
+                $sale->payment_status = 'PAGADO';
+            }
             $sale->way_to_pay = $request->way_to_pay;
             $sale->paid_out = $request->paid_out;
             $sale->debt = $sale->commission_price - $sale->paid_out;
@@ -78,16 +105,17 @@ class SaleController extends Controller
             $sale->save();
 
             if ($sale) {
-                $quotation = Quotation::find($request->quotation);
-                $quotation->status = 'payment';
-                $quotation->save();
+                $quotationReceived->status = 'payment';
+                $quotationReceived->save();
 
-                $income = new Income;
-                $income->date = $mytime->toDateString();
-                $income->ammount = $sale->paid_out;
-                $income->concept = 'Venta';
-                $income->sale_id = $sale->id;
-                $income->save();
+                if ($request->paid_out > 0) {
+                    $income = new Income;
+                    $income->date = $mytime->toDateString();
+                    $income->ammount = $sale->paid_out;
+                    $income->concept = 'Venta';
+                    $income->sale_id = $sale->id;
+                    $income->save();
+                }
 
                 $expense = new Expense;
                 $expense->date = $mytime->toDateString();
@@ -99,7 +127,7 @@ class SaleController extends Controller
                 $expense->save();
             }
             DB::commit();
-            return redirect('/admin/ventas')->with('success', 'Registro creado satisfactoriamente.');
+            return response()->json(["message" => "success"]);
         } catch (Exception $e) {
             DB::rollBack();
         }
@@ -142,7 +170,11 @@ class SaleController extends Controller
             $sale->unit_price = $request->unit_price;
             $sale->commission_price = $request->commission_price;
             $sale->tdc = $card->name_account;
-            $sale->payment_status = $request->payment_status;
+            if ($request->paid_out < $request->commision_price) {
+                $sale->payment_status = 'PARCIAL';
+            } else {
+                $sale->payment_status = 'PAGADO';
+            }
             $sale->way_to_pay = $request->way_to_pay;
             $sale->paid_out = $request->paid_out;
             $sale->debt = $sale->commission_price - $sale->paid_out;
@@ -150,12 +182,14 @@ class SaleController extends Controller
             $sale->save();
 
             if ($sale) {
-                $income = new Income;
-                $income->date = $mytime->toDateString();
-                $income->ammount = $sale->paid_out;
-                $income->concept = 'Venta';
-                $income->sale_id = $sale->id;
-                $income->save();
+                if ($sale->paid_out >= 1) {
+                    $income = new Income;
+                    $income->date = $mytime->toDateString();
+                    $income->ammount = $sale->paid_out;
+                    $income->concept = 'Venta';
+                    $income->sale_id = $sale->id;
+                    $income->save();
+                }
 
                 $expense = new Expense;
                 $expense->date = $mytime->toDateString();
@@ -171,6 +205,53 @@ class SaleController extends Controller
 
         } catch (Exception $e) {
             DB::rollBack();
+        }
+    }
+
+    public function details($id)
+    {
+        $sale = Sale::find($id);
+        return view('sales.details', compact('sale'));
+    }
+
+    public function showDebt($id)
+    {
+        $sale = Sale::find($id);
+        return response()->json($sale);
+    }
+
+    public function procesPayment(PaymentRequest $request, $id)
+    {
+        if ($request->ajax()) {
+            $sale = Sale::FindOrFail($id);
+            if ($request->paid_out > 0 and $request->paid_out <= $sale->debt) {
+                $sale->paid_out = $sale->paid_out + $request->paid_out;
+                $sale->debt = $sale->debt - $request->paid_out;
+                if ($sale->debt == 0) {
+                    $sale->payment_status = 'PAGADO';
+                }
+                $sale->save();
+                // Generate income
+                $mytime = Carbon::now('America/Mexico_City');
+
+                $income = new Income;
+                $income->date = $mytime->toDateString();
+                $income->ammount = $request->paid_out;
+                $income->concept = 'Venta';
+                $income->sale_id = $sale->id;
+                $income->save();
+
+            } else {
+                return response()->json(['success' => 'false']);
+            }
+            // $input = $request->all();
+            // $result = $sale->fill($input)->save();
+
+            if ($sale) {
+                return response()->json(['success' => 'true']);
+            } else {
+                return response()->json(['success' => 'false']);
+            }
         }
     }
 }

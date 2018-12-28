@@ -21,6 +21,11 @@ Crear
                 <form class="forms-sample" method="POST" action="{{url('/admin/clientes/guardar')}}">
                     @csrf
                     <div class="form-group">
+                        <label for="exampleInputUsername1">Alias(*)</label>
+                    <input type="text" name="brand" value="{{ old('brand') }}" class="form-control{{ $errors->has('brand') ? ' is-invalid' : '' }}"
+                            id="exampleInputUsername1" required placeholder="Alias de Cliente">
+                    </div>
+                    <div class="form-group">
                         <label for="exampleInputUsername1">Nombre Completo(*)</label>
                     <input type="text" name="name" value="{{ old('name') }}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}"
                             id="exampleInputUsername1" required placeholder="Nombre de Cliente">

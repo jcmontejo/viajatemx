@@ -18,7 +18,7 @@
           $(this).parents('.nav-item').last().addClass('active');
           if ($(this).parents('.sub-menu').length) {
             $(this).closest('.collapse').addClass('show');
-            $(this).addClass('active');
+           // $(this).addClass('active');
           }
         }
       } else {
@@ -27,7 +27,7 @@
           $(this).parents('.nav-item').last().addClass('active');
           if ($(this).parents('.sub-menu').length) {
             $(this).closest('.collapse').addClass('show');
-            $(this).addClass('active');
+            //$(this).addClass('active');
           }
         }
       }

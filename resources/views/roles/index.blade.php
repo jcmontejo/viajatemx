@@ -47,9 +47,11 @@ Todos
 <div class="card">
     <div class="card-header">
         <p class="card-description float-right">
+            @can('agregar_roles')
             <a href="#" class="btn btn-gradient-success btn-rounded btn-lg" data-toggle="modal" data-target="#roleModal">
                 <i class="mdi mdi-account-plus"></i>
                 Agregar Nuevo Rol</a>
+            @endcan
         </p>
     </div>
     <!-- /.box-header -->
@@ -65,9 +67,9 @@ Todos
         @include('shared._permissions', [
         'title' => $role->name .' Permisos',
         'model' => $role ])
-        @can('editar_roles')
+        {{-- @can('editar_roles') --}}
         {!! Form::submit('Guardar', ['class' => 'btn btn-primary']) !!}
-        @endcan
+        {{-- @endcan --}}
         @endif
         <hr>
         {!! Form::close() !!}

@@ -23,8 +23,8 @@ Todos
             <div class="card-body">
                 @include('layouts.messages')
                 {{-- <p class="card-description float-right">
-                    <a class="btn btn-gradient-success btn-rounded btn-lg" href="{{url('/admin/tarjetas/crear')}}"
-                        role="button"><i class="mdi mdi-account-plus"></i>&nbsp;
+                    <a class="btn btn-gradient-success btn-rounded btn-lg" href="{{url('/admin/tarjetas/crear')}}" role="button"><i
+                            class="mdi mdi-account-plus"></i>&nbsp;
                         Nueva Tarjeta</a>
                 </p> --}}
                 <div class="table-responsive">
@@ -40,11 +40,16 @@ Todos
                         </thead>
                         <tbody>
                             @foreach ($incomes as $item)
+                            @php
+                            $sale = App\Sale::find($item->sale_id);
+                            @endphp
                             <tr>
                                 <td>{{$item->date}}</td>
                                 <td>{{$item->ammount}}</td>
                                 <td>{{$item->concept}}</td>
-                                <td>{{$item->sale_id}}</td>
+                                <td>
+                                    {{$sale->client}},{{$sale->date}},{{$sale->destination}}
+                                </td>
                                 {{-- <td>
                                     <a class="btn btn-info btn-xs" href="{{url('/admin/tarjetas/editar', $item['id'])}}"><i
                                             class="mdi mdi-tooltip-edit"></i>
@@ -91,9 +96,18 @@ Todos
         $('#incomes').DataTable({
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-            }
+            },
+            dom: 'Bfrtip',
+            buttons: [{
+                    extend: 'excel',
+                    className: 'btn btn-info btn-rounded mdi mdi-file-excel'
+                },
+                {
+                    extend: 'pdf',
+                    className: 'btn btn-info btn-rounded mdi mdi-file-pdf'
+                }
+            ]
         });
     });
-
 </script>
 @endsection

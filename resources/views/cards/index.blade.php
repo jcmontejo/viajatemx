@@ -23,16 +23,18 @@ Todas
             <div class="card-body">
                 @include('layouts.messages')
                 <p class="card-description float-right">
-                    <a class="btn btn-gradient-success btn-rounded btn-lg" href="{{url('/admin/tarjetas/crear')}}"
-                        role="button"><i class="mdi mdi-account-plus"></i>&nbsp;
+                    @can('agregar_tarjetas_credito')
+                    <a class="btn btn-gradient-success btn-rounded btn-lg" href="{{url('/admin/tarjetas/crear')}}" role="button"><i
+                            class="mdi mdi-account-plus"></i>&nbsp;
                         Nueva Tarjeta</a>
+                    @endcan
                 </p>
                 <div class="table-responsive">
                     <table class="table table-hover" id="providers">
                         <thead>
                             <tr class="bg-primary text-white">
-                                <th>Nombre Banco</th>
-                                <th>Nombre Cuenta</th>
+                                <th>Nombre de Cuenta</th>
+                                <th>Alias</th>
                                 <th>Clave Interbancaria</th>
                                 <th>Número de Cuenta</th>
                                 <th>Acciones</th>
@@ -46,11 +48,15 @@ Todas
                                 <td>{{$item->key}}</td>
                                 <td>{{$item->account_number}}</td>
                                 <td>
+                                    @can('editar_tarjetas_credito')
                                     <a class="btn btn-info btn-xs" href="{{url('/admin/tarjetas/editar', $item['id'])}}"><i
                                             class="mdi mdi-tooltip-edit"></i>
                                         Editar</a>
+                                    @endcan
+                                    @can('eliminar_tarjetas_credito')
                                     <button type="button" data-toggle="modal" data-target="#confirmDeleteModal-{{ $item->id }}"
                                         class="btn btn-danger btn-xs"><i class="mdi mdi-delete"></i> Eliminar</button>
+                                    @endcan
                                     <!-- Modal (Confirm Delete) -->
                                     <div class="modal fade" id="confirmDeleteModal-{{ $item->id }}" tabindex="-1" role="dialog"
                                         aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
@@ -91,9 +97,18 @@ Todas
         $('#providers').DataTable({
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-            }
+            },
+            dom: 'Bfrtip',
+            buttons: [{
+                    extend: 'excel',
+                    className: 'btn btn-info btn-rounded mdi mdi-file-excel'
+                },
+                {
+                    extend: 'pdf',
+                    className: 'btn btn-info btn-rounded mdi mdi-file-pdf'
+                }
+            ]
         });
     });
-
 </script>
 @endsection

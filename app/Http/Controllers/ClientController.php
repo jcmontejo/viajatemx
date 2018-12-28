@@ -31,7 +31,11 @@ class ClientController extends Controller
         $upper = strtoupper($request->name);
 
         $client = new Client();
-        $client->brand = str_slug($upper);
+        if ($request->brand) {
+            $client->brand = $request->brand;
+        }else {
+            $client->brand = str_slug($upper);
+        }  
         $client->name = $request->name;
         $client->birthdate = $request->birthdate;
         $client->phone = $request->phone;
@@ -50,17 +54,19 @@ class ClientController extends Controller
     public function edit($id)
     {
         $client = Client::find($id);
-        return view('clients.edit', compact('client'));
+        // return view('clients.edit', compact('client'));
+        return response()->json($client);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         $this->validate($request, ['name' => 'required', 'email' => 'required|string|email|max:255', 'phone' => 'required|digits:10']);
 
         // Get the client
-        $client = Client::findOrFail($request->input('id'));
+        $client = Client::findOrFail($id);
 
         // Update client
+        $client->brand = $request->brand;
         $client->name = $request->name;
         $client->birthdate = $request->birthdate;
         $client->phone = $request->phone;
@@ -69,12 +75,17 @@ class ClientController extends Controller
         $client->airline_accounts = $request->airline_accounts;
         $client->save();
 
-        return redirect('/admin/clientes')->with('success', 'Registro editado satisfactoriamente.');
+        // return redirect('/admin/clientes')->with('success', 'Registro editado satisfactoriamente.');
+        return response()->json(["message" => "success"]);
     }
 
     public function destroy($id)
     {
         Client::find($id)->delete();
-        return redirect('/admin/clientes')->with('success', 'Registro eliminado satisfactoriamente.');
+
+        return response()->json([
+            'success' => 'Record has been deleted successfully!',
+        ]);
+
     }
 }

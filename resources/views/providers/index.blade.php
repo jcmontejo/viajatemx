@@ -50,9 +50,11 @@ Todos
             <div class="card-body">
                 @include('layouts.messages')
                 <p class="card-description float-right">
+                    @can('agregar_proveedores')
                     <a class="btn btn-gradient-success btn-rounded btn-lg" href="{{url('/proveedores/crear')}}" role="button"><i
                             class="mdi mdi-account-plus"></i>&nbsp;
                         Nuevo Proveedor</a>
+                    @endcan
                 </p>
                 <div class="table-responsive">
                     <table class="table table-hover" id="providers">
@@ -73,11 +75,15 @@ Todos
                                 <td class="text-success">{{$item->email}} <i class="mdi mdi-account"></i></td>
                                 <td>{{$item->phone}}</td>
                                 <td>
+                                    @can('editar_proveedores')
                                     <a class="btn btn-info btn-xs" href="{{url('/proveedores/editar', $item['id'])}}"><i
                                             class="mdi mdi-tooltip-edit"></i>
                                         Editar</a>
+                                    @endcan
+                                    @can('eliminar_proveedores')
                                     <button type="button" data-toggle="modal" data-target="#confirmDeleteModal-{{ $item->id }}"
                                         class="btn btn-danger btn-xs"><i class="mdi mdi-delete"></i> Eliminar</button>
+                                    @endcan
                                     <!-- Modal (Confirm Delete) -->
                                     <div class="modal fade" id="confirmDeleteModal-{{ $item->id }}" tabindex="-1" role="dialog"
                                         aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
@@ -118,8 +124,20 @@ Todos
         $('#providers').DataTable({
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-            }
+            },
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'excel',
+                    className:'btn btn-info btn-rounded mdi mdi-file-excel'
+                },
+                {
+                    extend: 'pdf',
+                    className:'btn btn-info btn-rounded mdi mdi-file-pdf'
+                }
+            ]
         });
     });
+
 </script>
 @endsection
